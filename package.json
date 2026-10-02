@@ -1,0 +1,98 @@
+{
+  "name": "@thenavidm/gumloop-mcp-cli",
+  "version": "2.0.0",
+  "description": "Gumloop MCP and native CLI with current REST schemas, private account profiles and confirmed operations.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "gumloop-mcp": "dist/index.js",
+    "gumloop-cli": "dist/index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build",
+    "build:mcpb": "bash desktop-extension/build.sh",
+    "check:counts": "node scripts/check-counts.mjs",
+    "sync:api": "node scripts/sync-openapi.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@anthropic-ai/mcpb": "2.1.2",
+    "@types/node": "^22.10.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3",
+    "yaml": "^2.8.1"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": "Navid Moazzez (https://navid.me)",
+  "homepage": "https://navid.me/mcp-servers/gumloop",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thenavidm/gumloop-mcp-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thenavidm/gumloop-mcp-cli/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "INSTALL.md",
+    "SKILL.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "licenses",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "COMPARISON.md",
+    "CONTRIBUTING.md"
+  ],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "cli",
+    "command-line-tool",
+    "gumloop",
+    "workflow-automation",
+    "ai-agents-cli",
+    "flows",
+    "agents-api",
+    "brain",
+    "skills",
+    "generative-ai",
+    "codex",
+    "claude-code",
+    "claude-desktop",
+    "cursor",
+    "ai-agents",
+    "typescript",
+    "desktop-extension",
+    "private-accounts",
+    "api-key",
+    "json",
+    "windows-cli",
+    "write-safety",
+    "gemini-cli",
+    "windsurf",
+    "open-source",
+    "creator-workflows",
+    "artifacts"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "overrides": {
+    "tmp": "^0.2.7"
+  }
+}

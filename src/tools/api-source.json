@@ -1,0 +1,13 @@
+{
+  "checked": "2026-10-03",
+  "operationCount": 91,
+  "source": "https://docs.gumloop.com/api-reference/openapi.yaml",
+  "originalYamlSha256": "584628b3970168472ce710fdf892d0cb398d45e099cb7a2854cd17961680ea0e",
+  "sanitizedSha256": "c1f8a2ab3153ecd2afbe392a6d6801f38c9ebd6acfb063cada1a90662a3a26d0",
+  "notes": [
+    "Current non-streaming REST schema; all operations retained including explicit file adaptations.",
+    "Legacy start_agent/agent_status replaced by current agent sessions, with migration documented.",
+    "Current start_pipeline schema uses arbitrary top-level named flow inputs; do not copy obsolete pipeline_inputs SDK encoding.",
+    "No provider-account outcome or release established by schema generation."
+  ]
+}

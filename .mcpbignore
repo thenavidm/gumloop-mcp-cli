@@ -1,0 +1,14 @@
+*.map
+*.d.ts
+*.md
+!README.md
+.DS_Store
+node_modules/.package-lock.json
+node_modules/**/test/
+node_modules/**/tests/
+node_modules/**/*.md
+!node_modules/**/LICENSE*
+
+!THIRD_PARTY_NOTICES.md
+!licenses/**
+!node_modules/**/NOTICE*

@@ -1,0 +1,99 @@
+{
+  "manifest_version": "0.2",
+  "name": "gumloop",
+  "display_name": "Gumloop",
+  "version": "2.0.0",
+  "description": "Gumloop MCP server with 92 tools: 50 reads and 42 confirmed operations.",
+  "long_description": "Current REST operations with private named credentials and user/team identity selection. Account changes, agent/flow runs, uploads, MCP execution and deletions require explicit confirmation. Binary downloads and signed result URLs go to exclusive private files. Account and GUI outcomes remain separate from fixture/protocol validation.",
+  "author": {
+    "name": "Navid Moazzez",
+    "url": "https://navid.me"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thenavidm/gumloop-mcp-cli"
+  },
+  "homepage": "https://github.com/thenavidm/gumloop-mcp-cli",
+  "documentation": "https://github.com/thenavidm/gumloop-mcp-cli/blob/main/INSTALL.md",
+  "support": "https://github.com/thenavidm/gumloop-mcp-cli/issues",
+  "license": "AGPL-3.0-or-later",
+  "keywords": [
+    "gumloop",
+    "automation",
+    "agents",
+    "flows",
+    "private-accounts",
+    "mcp",
+    "cli",
+    "desktop-extension"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
+      "env": {
+        "GUMLOOP_API_KEY": "${user_config.api_key}",
+        "GUMLOOP_TOKEN_FILE": "${user_config.token_file}",
+        "GUMLOOP_READ_ONLY": "${user_config.read_only}",
+        "GUMLOOP_ALLOW_DESTRUCTIVE": "${user_config.allow_operations}",
+        "GUMLOOP_USER_ID": "${user_config.user_id}",
+        "GUMLOOP_TEAM_ID": "${user_config.team_id}"
+      }
+    }
+  },
+  "user_config": {
+    "token_file": {
+      "type": "string",
+      "title": "Private token-only file",
+      "description": "Absolute regular owner-only token file, at most 64 KB. Never bundle it.",
+      "required": false
+    },
+    "read_only": {
+      "type": "boolean",
+      "title": "Read only",
+      "description": "Hide and refuse account changes, agent/flow execution, uploads, MCP execution and deletions.",
+      "default": false,
+      "required": false
+    },
+    "api_key": {
+      "type": "string",
+      "title": "Private Gumloop API key",
+      "description": "API key from your account; leave empty for token_file.",
+      "required": false,
+      "sensitive": true
+    },
+    "allow_operations": {
+      "type": "boolean",
+      "title": "Allow explicitly confirmed account operations",
+      "description": "Allow only explicitly confirmed account operations and executions.",
+      "default": true,
+      "required": false
+    },
+    "user_id": {
+      "type": "string",
+      "title": "User ID",
+      "description": "User ID from your private Profile Settings; needed for flow endpoints.",
+      "required": false
+    },
+    "team_id": {
+      "type": "string",
+      "title": "Team ID",
+      "description": "Optional team ID; legacy API calls it project_id.",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=22"
+    }
+  }
+}
