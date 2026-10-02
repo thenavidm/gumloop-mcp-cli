@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1 — 2026-10-03
+
+- Correct author-link tracking to this Gumloop repository and keep package, desktop and setup versions aligned.
+
+
 ## 2.0.0 - 2026-10-03
 
 - Refresh all 91 reviewed REST operations and add the shared CLI/local MCP/desktop framework with 92 tools.

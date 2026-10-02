@@ -6,7 +6,7 @@ One npm package includes both binaries and all **92 tools**. Requires Node.js 22
 | --- | --- | --- |
 | Terminal | gumloop-cli | Scripts and agents with a shell |
 | Local MCP | gumloop-mcp | AI clients supporting stdio |
-| Desktop archive | gumloop-2.0.0.mcpb | Compatible Claude Desktop custom extensions |
+| Desktop archive | gumloop-2.0.1.mcpb | Compatible Claude Desktop custom extensions |
 | Gumloop-hosted alternative | https://mcp.gumloop.com/gumloop/mcp | Official remote OAuth/API-key access |
 
 ## Contents
@@ -124,7 +124,7 @@ Alternatively install the CLI, make SKILL.md available to Claude, and use shell 
 
 ### Install the .mcpb extension
 
-1. Download `gumloop-2.0.0.mcpb` from [GitHub Releases](https://github.com/thenavidm/gumloop-mcp-cli/releases/latest).
+1. Download `gumloop-2.0.1.mcpb` from [GitHub Releases](https://github.com/thenavidm/gumloop-mcp-cli/releases/latest).
 2. In a supported Claude Desktop build, open **Settings > Extensions > Advanced settings > Install Extension…** and select it.
 3. Enter a private API key in the sensitive setting, or an absolute private token-file path. Leave the unused credential method empty. Requests use Authorization: Bearer, with the configured user ID in x-auth-key when supplied. Enter the intended user ID and optional team ID in the private extension settings.
 4. Enable read-only if you want only the 50 read operations. Reconnect and ask for account verification.

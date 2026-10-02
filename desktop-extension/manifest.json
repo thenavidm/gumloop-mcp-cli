@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "gumloop",
   "display_name": "Gumloop",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Gumloop MCP server with 92 tools: 50 reads and 42 confirmed operations.",
   "long_description": "Current REST operations with private named credentials and user/team identity selection. Account changes, agent/flow runs, uploads, MCP execution and deletions require explicit confirmation. Binary downloads and signed result URLs go to exclusive private files. Account and GUI outcomes remain separate from fixture/protocol validation.",
   "author": {

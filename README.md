@@ -13,7 +13,7 @@ Gumloop MCP server and CLI for Codex and AI agents. **92 tools** for current flo
 
 Built and maintained by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=referral&utm_campaign=gumloop-mcp-cli&utm_content=readme). The complete guide is on [navid.me](https://navid.me/mcp-servers/gumloop).
 
-<img src="https://cdn.navid.me/repos/gumloop-mcp-cli.gif?v=2.0.0" alt="Illustrated workflow in the house terminal component" width="520">
+<img src="https://cdn.navid.me/repos/gumloop-mcp-cli.gif?v=2.0.1" alt="Illustrated workflow in the house terminal component" width="520">
 
 The terminal illustrates real command names and approval flow. It is not a recording of a provider account run. Gumloop already has official CLI and hosted MCP products; their supported platform, authentication and workflows are compared below.
 
@@ -107,7 +107,7 @@ gumloop-cli doctor
 gumloop-cli tools
 ```
 
-Node 22+ is required for manual installation. The versioned [desktop archive](https://github.com/thenavidm/gumloop-mcp-cli/releases/download/v2.0.0/gumloop-2.0.0.mcpb) bundles production dependencies for a compatible host. Read [INSTALL.md](INSTALL.md) before configuring credentials. After private setup:
+Node 22+ is required for manual installation. The versioned [desktop archive](https://github.com/thenavidm/gumloop-mcp-cli/releases/download/v2.0.1/gumloop-2.0.1.mcpb) bundles production dependencies for a compatible host. Read [INSTALL.md](INSTALL.md) before configuring credentials. After private setup:
 
 ```bash
 codex mcp add gumloop -- npx -y @thenavidm/gumloop-mcp-cli@latest
@@ -1791,7 +1791,7 @@ No maintained community implementation has been established as a stronger baseli
 
 | Component | Baseline |
 | --- | --- |
-| Package/desktop | 2.0.0 |
+| Package/desktop | 2.0.1 |
 | Current REST schema | OpenAPI 3.0.0/document 1.0.0; checked 2026-10-03 |
 | Operations/tools | 91 current REST + list_accounts; 92 shared tools |
 | Read/confirmed | 50 reads, 42 confirmed operations |
@@ -1957,9 +1957,9 @@ Navid Moazzez is a leading AI business strategist, and the host of the AI Creato
 
 **Links**
 
-- Personal website: [navid.me](https://navid.me?utm_source=github&utm_medium=referral&utm_campaign=firefly-mcp-cli&utm_content=readme)
-- Link in bio: [navid.bio](https://navid.bio?utm_source=github&utm_medium=referral&utm_campaign=firefly-mcp-cli&utm_content=readme)
-- Navid Media: [navid.media](https://navid.media?utm_source=github&utm_medium=referral&utm_campaign=firefly-mcp-cli&utm_content=readme)
+- Personal website: [navid.me](https://navid.me?utm_source=github&utm_medium=referral&utm_campaign=gumloop-mcp-cli&utm_content=readme)
+- Link in bio: [navid.bio](https://navid.bio?utm_source=github&utm_medium=referral&utm_campaign=gumloop-mcp-cli&utm_content=readme)
+- Navid Media: [navid.media](https://navid.media?utm_source=github&utm_medium=referral&utm_campaign=gumloop-mcp-cli&utm_content=readme)
 - YouTube: [@thenavidm](https://youtube.com/@thenavidm?sub_confirmation=1) and [@thenavidai](https://youtube.com/@thenavidai?sub_confirmation=1)
 - X: [@thenavidm](https://x.com/thenavidm)
 - Instagram: [@thenavidm](https://instagram.com/thenavidm)

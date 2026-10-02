@@ -1,6 +1,6 @@
 {
   "name": "@thenavidm/gumloop-mcp-cli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Gumloop MCP and native CLI with current REST schemas, private account profiles and confirmed operations.",
   "type": "module",
   "main": "./dist/index.js",
