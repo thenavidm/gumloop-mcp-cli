@@ -1781,7 +1781,7 @@ Include package/client/OS versions and sanitized status/error details in an issu
 | [Official SDKs](https://docs.gumloop.com/api-reference/sdk/python) | Python gumloop and JavaScript gumloop | Application integration; the Python SDK works on Windows and already has credential/transport controls |
 | Legacy owned MCP | Earlier private source | Flow/workbook/agent/file declarations without current shared CLI, release setup or enforced approval |
 
-Checked October 3, 2026. Current official CLI docs and the checksum-reviewed published 0.5.2 source refuse native Windows. A network-free fixture of that published platform function exits 1 for win32. The owned Node package must pass actual Windows CI before the portability claim is marked verified.
+Checked October 3, 2026. Current official CLI docs and the checksum-reviewed published 0.5.2 source refuse native Windows. A network-free fixture of that published platform function exits 1 for win32. Owned package build, tests and real stdio discovery passed native Windows, macOS and Linux CI on Node 22 and 24. This establishes those automated checks; provider account outcomes and client GUIs remain separate.
 
 Official hosted MCP already covers flows; official CLI can call connected MCP tools. No blanket flow absence or absent client approval is claimed. Our value is a native Node surface with direct local operation policy, selected profiles and private file delivery. Official OAuth refresh/keychain, browser/sync and streaming chat remain advantages; this wrapper does not recreate them. More names and SEO alone are not a superiority claim.
 
@@ -1798,8 +1798,8 @@ No maintained community implementation has been established as a stronger baseli
 | Official CLI inspected | PyPI gumloop 0.5.2 |
 | Official hosted MCP | 46 documented tools; live discovery unverified |
 | Node | 22+; CI targets 22/24 on macOS/Linux/Windows |
-| SDK / Ajv / formats | Lockfile records exact runtime releases |
-| TypeScript / Vitest / Vite / MCPB / YAML | Exact development releases in lockfile |
+| MCP SDK / Ajv / ajv-formats | 1.32.0 / 8.20.0 / 3.0.1 |
+| TypeScript / Vitest / Vite / MCPB / YAML | 7.0.2 / 5.0.3 / 8.3.2 / 2.1.2 / 2.9.1 |
 
 The dated CHANGELOG records user-facing changes. Version, annotated default-branch tag, npm dist-tag and desktop archive must agree at release. Preserve AGPL and private legacy history.
 
@@ -1873,7 +1873,7 @@ Use the documented stdio registration or shared shell commands. Codex is the pri
 <details>
 <summary><b>What about Windows?</b></summary>
 
-This package targets native Node 22+ on Windows. Official gumloop 0.5.2 CLI refuses native Windows; WSL and its Python SDK are alternatives. Actual owned Windows CI is required before release.
+This package targets native Node 22+ on Windows. Official gumloop 0.5.2 CLI refuses native Windows; WSL and its Python SDK are alternatives. Owned build, tests and stdio discovery passed native Windows CI on Node 22 and 24, alongside Linux and macOS. Provider account and desktop GUI outcomes remain separate.
 
 </details>
 

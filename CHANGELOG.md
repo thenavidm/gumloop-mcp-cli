@@ -18,8 +18,8 @@
 | Official CLI inspected | PyPI gumloop 0.5.2 |
 | Official hosted MCP | 46 documented tools; live discovery unverified |
 | Node | 22+; CI targets 22/24 on macOS/Linux/Windows |
-| SDK / Ajv / formats | Lockfile records exact runtime releases |
-| TypeScript / Vitest / Vite / MCPB / YAML | Exact development releases in lockfile |
+| MCP SDK / Ajv / ajv-formats | 1.32.0 / 8.20.0 / 3.0.1 |
+| TypeScript / Vitest / Vite / MCPB / YAML | 7.0.2 / 5.0.3 / 8.3.2 / 2.1.2 / 2.9.1 |
 
 The dated CHANGELOG records user-facing changes. Version, annotated default-branch tag, npm dist-tag and desktop archive must agree at release. Preserve AGPL and private legacy history.
 

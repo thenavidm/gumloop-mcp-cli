@@ -8,7 +8,7 @@
 | [Official SDKs](https://docs.gumloop.com/api-reference/sdk/python) | Python gumloop and JavaScript gumloop | Application integration; the Python SDK works on Windows and already has credential/transport controls |
 | Legacy owned MCP | Earlier private source | Flow/workbook/agent/file declarations without current shared CLI, release setup or enforced approval |
 
-Checked October 3, 2026. Current official CLI docs and the checksum-reviewed published 0.5.2 source refuse native Windows. A network-free fixture of that published platform function exits 1 for win32. The owned Node package must pass actual Windows CI before the portability claim is marked verified.
+Checked October 3, 2026. Current official CLI docs and the checksum-reviewed published 0.5.2 source refuse native Windows. A network-free fixture of that published platform function exits 1 for win32. Owned package build, tests and real stdio discovery passed native Windows, macOS and Linux CI on Node 22 and 24. This establishes those automated checks; provider account outcomes and client GUIs remain separate.
 
 Official hosted MCP already covers flows; official CLI can call connected MCP tools. No blanket flow absence or absent client approval is claimed. Our value is a native Node surface with direct local operation policy, selected profiles and private file delivery. Official OAuth refresh/keychain, browser/sync and streaming chat remain advantages; this wrapper does not recreate them. More names and SEO alone are not a superiority claim.
 
