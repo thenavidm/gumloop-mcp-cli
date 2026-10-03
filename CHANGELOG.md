@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+Use the native terminal capture at 1040 source pixels with lossless GIF optimization, displayed at 520 pixels, matching the Bluesky/Substack reference. Original assets remain available.
+
 ## 2.0.1 — 2026-10-03
 
 - Correct author-link tracking to this Gumloop repository and keep package, desktop and setup versions aligned.

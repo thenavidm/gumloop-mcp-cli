@@ -13,7 +13,7 @@ Gumloop MCP server and CLI for Codex and AI agents. **92 tools** for current flo
 
 Built and maintained by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=referral&utm_campaign=gumloop-mcp-cli&utm_content=readme). The complete guide is on [navid.me](https://navid.me/mcp-servers/gumloop).
 
-<img src="https://cdn.navid.me/repos/gumloop-mcp-cli.gif?v=2.0.1" alt="Illustrated workflow in the house terminal component" width="520">
+<img src="https://cdn.navid.me/repos/gumloop-mcp-cli-retina.gif" alt="Illustrated workflow in the house terminal component" width="520">
 
 The terminal illustrates real command names and approval flow. It is not a recording of a provider account run. Gumloop already has official CLI and hosted MCP products; their supported platform, authentication and workflows are compared below.
 
