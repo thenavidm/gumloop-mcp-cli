@@ -14,16 +14,8 @@ Official hosted MCP already covers flows; official CLI can call connected MCP to
 
 No maintained community implementation has been established as a stronger baseline in this review; absence of a search result is not proof none exists. Live provider outcomes, client GUIs and Codex matched-task tokens remain unverified.
 
-MCP and CLI use the same catalogue, schemas, handlers and WriteGuard. The house CLI calls the real server through SDK in-memory transport. Shell scripts can select fields with --select after receipt; this does not change upstream result size or billing.
+MCP and CLI use the same catalogue, schemas, handlers and Slipway's write guard. The house CLI calls the real server through SDK in-memory transport. Shell scripts can select fields with --select after receipt; this does not change upstream result size or billing.
 
-Fresh matched Codex task/usage measurements remain pending. Record the client/model/package versions, date, eager/deferred discovery settings, input/output tokens, latency, retries and equivalent successful result. Include command help/schema and returned data in the CLI measurement; CLI does not have zero context cost.
+README section 7 has this package's measured Claude Code and Codex costs against 2.0.2. No other offering was measured, so no comparison with one is claimed.
 
-| Measurement | Evidence |
-| --- | --- |
-| Eager MCP | Actual loaded tools and instructions |
-| Deferred MCP | Actual discovered/selected schemas and lookup overhead |
-| Skill read once | Complete skill and command discovery |
-| Recurring skill description | Actual installed listing |
-| Matched task | Same resource, permissions, fields and completed outcome |
-
-Do not estimate tokens from characters, reuse another repo's figures or infer superiority from 92 tool names. Provider credits and client-model tokens are separate. Claude Code benchmarks are deferred while Codex is the active client.
+Provider credits and client-model tokens are separate.

@@ -7,7 +7,7 @@ import { dirname, basename, isAbsolute } from "node:path";
 import type { Json, GumloopClient, QueryParam } from "../api/client.js";
 import { UsageError } from "../api/errors.js";
 import { selectAccount, type Config } from "../config.js";
-import type { Risk } from "../safety.js";
+import type { Risk } from "@thenavidm/slipway";
 export type Operation = {
   name: string;
   title: string;
@@ -88,9 +88,13 @@ function fieldsFor(op: Operation): Json {
     additionalProperties: false,
   };
 }
-const bodyValidators = new Map(
-  operations.map((op) => [op.name, ajv.compile(op.bodySchema)]),
-);
+// Each schema compiles on first use: compiling all of them at load held back the server's first answer. compileAll() runs them in tests.
+const bodyValidators = new Map<string, ValidateFunction>();
+function bodyValidator(op: Operation): ValidateFunction {
+  let v = bodyValidators.get(op.name);
+  if (!v) bodyValidators.set(op.name, (v = ajv.compile(op.bodySchema)));
+  return v;
+}
 async function execute(
   op: Operation,
   args: Json,
@@ -138,7 +142,7 @@ async function execute(
   if(Object.keys(op.bodySchema.properties??{}).includes("user_id") && !body.user_id && !body.project_id)throw new UsageError("This legacy flow/file operation needs a private profile user_id or team_id (project_id), or an explicit request identity.");
   if(op.params.some(p=>p.name==="user_id") && !args.user_id && !args.project_id)throw new UsageError("This flow operation needs user_id or project_id, or a matching private profile.");
   if(op.name==="get_run_history" && !args.saved_item_id && !args.workbook_id)throw new UsageError("Provide saved_item_id or workbook_id.");
-  check(bodyValidators.get(op.name)!, body);
+  check(bodyValidator(op), body);
   let wireBody: Json | FormData = body;
   if(op.contentType === "multipart/form-data") {
     const form = new FormData();let total=0;
@@ -217,11 +221,20 @@ ALL_TOOLS.push({
     })),
   }),
 });
-const validators = new Map(
-  ALL_TOOLS.map((t) => [t.name, ajv.compile(t.inputSchema)]),
-);
+const validators = new Map<string, ValidateFunction>();
+function validatorFor(tool: ToolSpec): ValidateFunction {
+  let v = validators.get(tool.name);
+  if (!v) validators.set(tool.name, (v = ajv.compile(tool.inputSchema)));
+  return v;
+}
 export function validateArguments(tool: ToolSpec, args: Json): void {
-  check(validators.get(tool.name)!, args);
+  check(validatorFor(tool), args);
+}
+/** Compile every input and body schema, as loading once did, so a test can prove they all compile. */
+export function compileAll(): number {
+  for (const t of ALL_TOOLS) validatorFor(t);
+  for (const op of operations) bodyValidator(op);
+  return validators.size + bodyValidators.size;
 }
 export function visibleTools(config: Config): ToolSpec[] {
   return ALL_TOOLS.filter((t) => !config.readOnly || t.risk === "read");

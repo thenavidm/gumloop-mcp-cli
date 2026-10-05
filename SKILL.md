@@ -26,7 +26,8 @@ Use --agent for compact JSON and --select for needed output fields. Dashed comma
 | Exit | Meaning |
 | --- | --- |
 | 0 | Success |
-| 2 | Invalid usage or refused operation |
+| 1 | Unexpected error |
+| 2 | Invalid usage or refused operation, an unknown command or a hidden write |
 | 3 | Not found |
 | 4 | Authentication/permissions |
 | 5 | API/transport failure |
@@ -35,7 +36,7 @@ Use --agent for compact JSON and --select for needed output fields. Dashed comma
 
 ## Approval and scope
 
-The shared WriteGuard runs before handlers read local upload bytes or call the provider. Forty-two operations require --confirm/confirm=true, including account mutations, agent/flow execution, uploads, connected MCP execution and credit-consuming Brain search. --agent/--yes never supplies confirmation.
+Slipway's write guard runs before handlers read local upload bytes or call the provider. Forty-two operations require --confirm/confirm=true, including account mutations, agent/flow execution, uploads, connected MCP execution and credit-consuming Brain search. --agent/--yes never supplies confirmation. Over MCP the person approves each in the client's own prompt or form; confirm=true counts only where the client cannot ask.
 
 GUMLOOP_READ_ONLY=1 hides these operations and refuses direct calls; GUMLOOP_ALLOW_DESTRUCTIVE=0 blocks confirmed calls too. Restart after policy changes. Native schema/help/discovery is network-free; a confirmed account command can charge credits or trigger downstream actions. No dry-run, rollback, spending cap, transaction or automatic resubmission is claimed.
 
@@ -100,4 +101,4 @@ After private environment configuration:
 codex mcp add gumloop -- npx -y @thenavidm/gumloop-mcp-cli@latest
 ```
 
-Optional Claude Code setup and the other clients are in INSTALL.md. Fresh matched-task usage evidence is pending; do not invent token savings.
+Optional Claude Code setup and the other clients are in INSTALL.md. Measured costs are in README section 7.

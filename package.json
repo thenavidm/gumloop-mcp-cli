@@ -1,6 +1,6 @@
 {
   "name": "@thenavidm/gumloop-mcp-cli",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "Gumloop MCP and native CLI with current REST schemas, private account profiles and confirmed operations.",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,12 +23,13 @@
     "sync:api": "node scripts/sync-openapi.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.32.0",
+    "@thenavidm/slipway": "^0.1.20",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1"
   },
   "devDependencies": {
     "@anthropic-ai/mcpb": "2.1.2",
+    "@modelcontextprotocol/sdk": "^1.32.0",
     "@types/node": "^22.10.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.2",

@@ -11,13 +11,13 @@
 
 Gumloop MCP server and CLI for Codex and AI agents. **92 tools** for current flows, agents, sessions, Brain, skills, artifacts and administration, with private accounts and explicit operation approval. One shared implementation supplies both binaries and a desktop bundle.
 
-Built and maintained by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=referral&utm_campaign=gumloop-mcp-cli&utm_content=readme). The complete guide is on [navid.me](https://navid.me/mcp-servers/gumloop).
+Built and maintained by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=referral&utm_campaign=gumloop-mcp-cli&utm_content=readme). Built on [Slipway](https://github.com/thenavidm/slipway), which turns one definition of each tool into the MCP server and the CLI. The complete guide is on [navid.me](https://navid.me/mcp-servers/gumloop).
 
 <img src="https://cdn.navid.me/repos/gumloop-mcp-cli-retina.gif" alt="Illustrated workflow in the house terminal component" width="520">
 
 The terminal illustrates real command names and approval flow. It is not a recording of a provider account run. Gumloop already has official CLI and hosted MCP products; their supported platform, authentication and workflows are compared below.
 
-Requires Node 22+ and eligible Gumloop API access for account operations. **Validation:** fixture tests, schema validation and protocol/artifact discovery are separate from provider-account outcomes, desktop GUI outcomes and fresh measured task/token evidence. Pending evidence is recorded, without invented success rates or efficiency claims.
+Requires Node 22+ and eligible Gumloop API access for account operations. **Validation:** fixture tests, schema validation and protocol/artifact discovery are separate from provider-account and desktop GUI outcomes, which are not claimed. Section 7 has the measured token costs.
 
 ## Two ways to use it
 
@@ -107,7 +107,7 @@ gumloop-cli doctor
 gumloop-cli tools
 ```
 
-Node 22+ is required for manual installation. The versioned [desktop archive](https://github.com/thenavidm/gumloop-mcp-cli/releases/download/v2.0.1/gumloop-2.0.1.mcpb) bundles production dependencies for a compatible host. Read [INSTALL.md](INSTALL.md) before configuring credentials. After private setup:
+Node 22+ is required for manual installation. The versioned [desktop archive](https://github.com/thenavidm/gumloop-mcp-cli/releases/download/v3.0.0/gumloop-3.0.0.mcpb) bundles production dependencies for a compatible host. Read [INSTALL.md](INSTALL.md) before configuring credentials. After private setup:
 
 ```bash
 codex mcp add gumloop -- npx -y @thenavidm/gumloop-mcp-cli@latest
@@ -178,7 +178,7 @@ gumloop-cli list-agents --agent --select agents
 | --- | --- |
 | `--json` | JSON output |
 | `--compact` | Single-line JSON |
-| `--agent` | JSON, compact, no input and no color |
+| `--agent` | Compact JSON and no prompts; never confirms a write |
 | `--select a,b.c` | Keep selected fields; dotted paths descend and arrays are traversed |
 | `--confirm` | Confirm the requested flow, session, paid search or account operation |
 | `--no-input`, `--no-color`, `--yes` | Automation switches; none overrides the spending guard |
@@ -188,7 +188,8 @@ Global output flags apply to tool commands. `doctor` has its own `--network` opt
 | Exit code | Meaning | What a script should do |
 | --- | --- | --- |
 | 0 | Success | Read stdout |
-| 2 | Usage, invalid input or a refused write | Fix the input or confirm only the requested action |
+| 1 | Unexpected error | Report it with the command that caused it |
+| 2 | Usage, invalid input, a refused write, an unknown command or a hidden write | Fix the input or confirm only the requested action |
 | 3 | Job or local upload file not found | Check the ID/path |
 | 4 | Authentication or entitlement rejected | Check private credential settings and permissions |
 | 5 | API or network failure | Inspect an accepted job before another paid submission |
@@ -199,19 +200,23 @@ The underscore spelling also works. `start_flow` and `start-flow` call the same 
 
 ## 7. MCP or CLI and token cost
 
-MCP and CLI use the same catalogue, schemas, handlers and WriteGuard. The house CLI calls the real server through SDK in-memory transport. Shell scripts can select fields with --select after receipt; this does not change upstream result size or billing.
+MCP and CLI use the same catalogue, schemas, handlers and write guard: [Slipway](https://github.com/thenavidm/slipway) builds the MCP server, over stdio or `--http`, and the CLI from each tool's one definition. Shell scripts can select fields with --select after receipt; this does not change upstream result size or billing.
 
-Fresh matched Codex task/usage measurements remain pending. Record the client/model/package versions, date, eager/deferred discovery settings, input/output tokens, latency, retries and equivalent successful result. Include command help/schema and returned data in the CLI measurement; CLI does not have zero context cost.
+Measured on 2026-10-05 against 2.0.2, with Claude Code 2.1.286 on Claude Opus 5.5 (one short prompt with and without the server connected, the difference read from the API's own usage figures) and Codex 0.159.3 on gpt-6.1-sol:
 
-| Measurement | Evidence |
-| --- | --- |
-| Eager MCP | Actual loaded tools and instructions |
-| Deferred MCP | Actual discovered/selected schemas and lookup overhead |
-| Skill read once | Complete skill and command discovery |
-| Recurring skill description | Actual installed listing |
-| Matched task | Same resource, permissions, fields and completed outcome |
+| Cost | 2.0.2 | 3.0.0 |
+| --- | --- | --- |
+| Claude Code, every tool loaded, every message | 61,936 | 56,695 |
+| Claude Code's default, tool search, every message | 1,486 | 1,488 |
+| `SKILL.md`, read once | 3,150 | 3,210 |
+| Codex over the CLI, one task, median of five | 107,376 | 83,661 |
+| Codex over MCP, the same task, median of five | 78,443 | 78,249 |
 
-Do not estimate tokens from characters, reuse another repo's figures or infer superiority from 92 tool names. Provider credits and client-model tokens are separate. Claude Code benchmarks are deferred while Codex is the active client.
+The task was "find the command that starts a flow run, and the flags it requires". Every tool loaded costs less because parts that several tools repeated are written once. Over the CLI, every 3.0.0 run asked `which`, whose answer carries the command's help, where every 2.0.2 run read the command list and then the help: one request fewer. Over MCP, 3.0.0 cost slightly less. `SKILL.md` costs 60 more because it says how approval works over MCP and what exit codes 1 and 2 cover.
+
+Tool-list bytes or characters divided by four are not API usage, and no other offering was measured.
+
+Provider credits and client-model tokens are separate.
 
 ## 8. Every tool and argument
 
@@ -322,7 +327,7 @@ Every route and argument below comes from actual stdio discovery and the reviewe
 | `project_id` | No; body and guard rules apply | string | (Optional) The id of the project within which the flow is executed. |
 | `saved_item_id` | No; body and guard rules apply | string | The id for the saved flow. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -338,7 +343,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `user_id` | No; body and guard rules apply | string | The user ID. Required if project_id is not provided. |
 | `project_id` | No; body and guard rules apply | string | The project ID. Required if user_id is not provided. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -449,7 +454,7 @@ output_file must be new and absolute in a private directory, reserved exclusivel
 | `user_id` | No; body and guard rules apply | string | The user ID associated with the file. Required if project_id is not provided. |
 | `project_id` | No; body and guard rules apply | string | The project ID associated with the file. Required if user_id is not provided. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 | `file_path` | No; body and guard rules apply | string | Regular local file path, no symlink, at most 3 MiB. Encoded as native base64 file_content; cannot mix with file_content or payload routes. minLength: `1`. |
@@ -466,7 +471,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `user_id` | No; body and guard rules apply | string | The user ID associated with the files. Required if project_id is not provided. |
 | `project_id` | No; body and guard rules apply | string | The project ID associated with the files. Required if user_id is not provided. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -504,7 +509,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `user_email` | No; body and guard rules apply | string | The email address of the target user to add or remove. |
 | `is_admin` | No; body and guard rules apply | boolean | When adding a user, specify whether they should have admin privileges (default is false). |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -522,7 +527,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `action` | No; body and guard rules apply | string | The action to perform - either 'add' or 'remove' a user. Values: `add`, `remove`. |
 | `user_email` | No; body and guard rules apply | string | The email address of the target user to add or remove. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -562,7 +567,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `monthly_credit_limit` | No; body and guard rules apply | integer/null | The monthly credit limit applied to each member of this role, or null to clear the role-level limit. minimum: `0`. maximum: `1000000000`. |
 | `user_id` | No; body and guard rules apply | string | Your user id -- you must be an organization admin to manage custom role credit limits. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -586,7 +591,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `workspace_ids` | No; body and guard rules apply | array | An optional array of workspace IDs to include in the export. When `export_level` is `"workspace"`, exactly one workspace ID is required. Ignored if `include_all_workspaces` is `true`. **Not applicable when `data_type` is `"credit_logs"`.** Items: string. |
 | `entity_ids` | No; body and guard rules apply | array | An optional array of specific entity IDs to filter the export. For workflow exports (`data_type: "workflows"`), these are workbook IDs. For agent exports (`data_type: "agents"`) and agent interaction exports (`data_type: "agent_interactions"`), these are agent IDs. When provided, only data for the specified entities will be included. **Not applicable when `data_type` is `"credit_logs"`.** Items: string. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -644,7 +649,7 @@ output_file must be new and absolute in a private directory, reserved exclusivel
 | `agent_id` | No; body and guard rules apply | string/null | Optional caller-supplied agent ID. When omitted, the server generates one. |
 | `team_id` | No; body and guard rules apply | string/null | ID of the team to create the agent under. When omitted, the agent is owned by the authenticated user. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -676,7 +681,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `is_active` | No; body and guard rules apply | boolean/null | Setting this to `false` retires the agent: it disappears from `GET /agents`, and `GET`/`PATCH /agents/{agent_id}` return `404`, so it cannot be reactivated through the API. This is not a pause switch — to stop an agent from running while keeping it reachable, disable its triggers instead. |
 | `team_id` | No; body and guard rules apply | string/null | When provided, transfers ownership of the agent to this team. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -700,7 +705,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `tool_choice` | No; body and guard rules apply | Union | `"auto"` lets the model choose and is the default when `tools` are sent. `"none"` disables tool calls, `"required"` forces a tool call, and `{"type": "function", "function": {"name": "..."}}` forces a specific tool. |
 | `provider` | No; body and guard rules apply | object | OpenRouter provider routing config. Caller fields like `sort` and `order` are honored; ZDR/data_collection policy is server-enforced. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -763,7 +768,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `attach` | No; body and guard rules apply | array | Skill IDs to attach. Ignored if already attached. default: `[]`. Items: string. |
 | `detach` | No; body and guard rules apply | array | Skill IDs to detach. Ignored if not attached. default: `[]`. Items: string. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -787,7 +792,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `agent_id` | Yes | string | ID of the agent. Also accepts the reserved aliases `gumball` and `analytics`. minLength: `1`. |
 | `server_id` | Yes | string | ID of the MCP server from the caller's catalog. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### detach_agent_mcp_server
 
@@ -798,7 +803,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `agent_id` | Yes | string | ID of the agent. Also accepts the reserved aliases `gumball` and `analytics`. minLength: `1`. |
 | `server_id` | Yes | string | ID of the MCP server to detach. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### list_sessions
 
@@ -830,7 +835,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `metadata` | No; body and guard rules apply | object | Arbitrary key/value metadata attached to the session. Stored under `metadata.client`. |
 | `stream` | No; body and guard rules apply | boolean | Must be `false` (or omitted) when calling `api.gumloop.com`. Set to `true` only when calling `ws.gumloop.com` (see the streaming section above). default: `False`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -852,7 +857,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `session_id` | Yes | string | ID of the session to rename. minLength: `1`. |
 | `name` | No; body and guard rules apply | string | New name for the session. Leading and trailing whitespace is removed before the 1-256 character limit is applied, so a whitespace-only value is rejected. minLength: `1`. maxLength: `256`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -869,7 +874,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `stream` | No; body and guard rules apply | boolean | Must be `false` (or omitted) when calling `api.gumloop.com`. Set to `true` only when calling `ws.gumloop.com` (see the streaming section above). default: `False`. |
 | `attachments` | No; body and guard rules apply | array | Files to attach to the message. Each `file_name` must be a stored path returned by Upload session file for this session. maxItems: `10`. Items: object. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -883,7 +888,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | --- | --- | --- | --- |
 | `session_id` | Yes | string | ID of the session to cancel. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### upload_session_file
 
@@ -896,7 +901,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `file_content` | No; body and guard rules apply | string | Base64-encoded file contents. Maximum decoded size is 200MB. format: `byte`. |
 | `media_type` | No; body and guard rules apply | string | MIME type of the file. Echoed back in the response. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -911,7 +916,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `session_id` | Yes | string | ID of the session with pending approvals. minLength: `1`. |
 | `approval_responses` | No; body and guard rules apply | array | Answers to pending asks. Each `action_request_id` may appear at most once. minItems: `1`. maxItems: `20`. Items: object. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -935,7 +940,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `session_id` | Yes | string | ID of the session to queue the message on. minLength: `1`. |
 | `input` | No; body and guard rules apply | string | The message to queue. Cannot be empty. Also accepted as `message` for backwards compatibility. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -951,7 +956,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `queued_message_id` | Yes | string | ID of the queued message to update. minLength: `1`. |
 | `input` | No; body and guard rules apply | string | The new message content. Cannot be empty. Also accepted as `message` for backwards compatibility. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -966,7 +971,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `session_id` | Yes | string | ID of the session the queued message belongs to. minLength: `1`. |
 | `queued_message_id` | Yes | string | ID of the queued message to delete. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### send_queued_message
 
@@ -977,7 +982,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `session_id` | Yes | string | ID of the session the queued message belongs to. minLength: `1`. |
 | `queued_message_id` | Yes | string | ID of the queued message to send. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### list_mcp_servers
 
@@ -1065,7 +1070,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `calls` | No; body and guard rules apply | array | Tool calls to execute. Dispatched concurrently; the batch is capped at 5. minItems: `1`. maxItems: `5`. Items: object. |
 | `team_id` | No; body and guard rules apply | string/null | Team the calls are scoped to. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1081,7 +1086,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `limit` | No; body and guard rules apply | integer | Maximum number of results to return. minimum: `1`. maximum: `50`. default: `8`. |
 | `source_type` | No; body and guard rules apply | array/null | Restrict results to specific source types. Omit to search every source you can access. Valid values: `notion`, `google_drive`, `slack`, `github`, `confluence`, `direct_file_uploads`, `gumloop_artifacts`. minItems: `1`. Items: string. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1112,7 +1117,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `team_id` | No; body and guard rules apply | string | The team for `scope: team`. Not accepted with other scopes. |
 | `require_approval` | No; body and guard rules apply | boolean | Create as a draft that estimates credits before anything is indexed. default: `False`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1135,7 +1140,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | --- | --- | --- | --- |
 | `source_id` | Yes | string | The source id. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### list_brain_files
 
@@ -1157,7 +1162,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `source_id` | Yes | string | The source id. minLength: `1`. |
 | `files` | No; body and guard rules apply | array | Regular local file paths, not base64; each file and total upload at most 5 MiB. Paths cannot be symlinks. minItems: `1`. maxItems: `25`. Items: string. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1174,7 +1179,7 @@ files contains regular local paths. The handler reads actual bytes and sends nat
 | `source_id` | Yes | string | The source id. minLength: `1`. |
 | `file_id` | Yes | string | See current schema minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### get_brain_source_estimate
 
@@ -1193,7 +1198,7 @@ files contains regular local paths. The handler reads actual bytes and sends nat
 | --- | --- | --- | --- |
 | `source_id` | Yes | string | The source id. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### list_skills
 
@@ -1221,7 +1226,7 @@ files contains regular local paths. The handler reads actual bytes and sends nat
 | `files` | No; body and guard rules apply | array | Regular local file paths, not base64; each file and total upload at most 5 MiB. Paths cannot be symlinks. minItems: `1`. maxItems: `25`. Items: string. |
 | `team_id` | No; body and guard rules apply | string | Team that should own the skill. When omitted, the skill is owned by the authenticated user. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1238,7 +1243,7 @@ files contains regular local paths. The handler reads actual bytes and sends nat
 | `skill_id` | Yes | string | ID of the skill to update. minLength: `1`. |
 | `files` | No; body and guard rules apply | array | Regular local file paths, not base64; each file and total upload at most 5 MiB. Paths cannot be symlinks. minItems: `1`. maxItems: `25`. Items: string. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1254,7 +1259,7 @@ files contains regular local paths. The handler reads actual bytes and sends nat
 | --- | --- | --- | --- |
 | `skill_id` | Yes | string | ID of the skill to delete. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### download_skill_file
 
@@ -1316,7 +1321,7 @@ output_file must be new and absolute in a private directory, reserved exclusivel
 | `cookies` | No; body and guard rules apply | array | Cookies in `chrome.cookies.Cookie` or CDP `Cookie` shape. minItems: `1`. Items: object. |
 | `team_id` | No; body and guard rules apply | string | Import into a team-owned profile instead of a personal one. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1357,7 +1362,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `session_ids` | No; body and guard rules apply | array | Sessions to grade. Duplicates are rejected. minItems: `1`. maxItems: `200`. Items: string. |
 | `dry_run` | No; body and guard rules apply | boolean | Report cost and skipped sessions without queuing. default: `False`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1407,7 +1412,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `data_points` | No; body and guard rules apply | array | Data points to extract (replaces existing list). Max 40. Items: object. |
 | `sentiment` | No; body and guard rules apply | object | See the full input schema. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1447,7 +1452,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | Argument | Required | Type | Details |
 | --- | --- | --- | --- |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 A body is required. Native body flags, payload and payload_file are mutually exclusive. Required native body fields: Inspect endpoint requirements. Profile defaults fill supported user/team identity fields before body validation.
 
@@ -1468,7 +1473,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | --- | --- | --- | --- |
 | `evaluation_id` | Yes | string | ID of the organization evaluation. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 A body is required. Native body flags, payload and payload_file are mutually exclusive. Required native body fields: Inspect endpoint requirements. Profile defaults fill supported user/team identity fields before body validation.
 
@@ -1480,7 +1485,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | --- | --- | --- | --- |
 | `evaluation_id` | Yes | string | ID of the organization evaluation. minLength: `1`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 
 #### set_organization_evaluation_targets
 
@@ -1491,7 +1496,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `evaluation_id` | Yes | string | ID of the organization evaluation. minLength: `1`. |
 | `targets` | No; body and guard rules apply | array | See the full input schema. maxItems: `1000`. Items: EvaluationTarget. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1507,7 +1512,7 @@ A body is required. Native body flags, payload and payload_file are mutually exc
 | `session_ids` | No; body and guard rules apply | array | Sessions to grade. Duplicates are rejected. minItems: `1`. maxItems: `200`. Items: string. |
 | `dry_run` | No; body and guard rules apply | boolean | Report cost and skipped sessions without queuing. default: `False`. |
 | `account` | No; body and guard rules apply | string | Named private Gumloop account; selects private credentials and user/team identity. |
-| `confirm` | No; body and guard rules apply | boolean | Must be true for this exact requested account change, agent/flow execution, upload or deletion. |
+| `confirm` | No; body and guard rules apply | boolean | Set true only when the user asked for exactly this action. |
 | `payload` | No; body and guard rules apply | object | Complete JSON request body instead of body flags. Preserves current endpoint fields and values. |
 | `payload_file` | No; body and guard rules apply | string | Regular local JSON body file, at most 5 MB. Cannot be mixed with body flags or payload. minLength: `1`. |
 
@@ -1675,7 +1680,9 @@ Default is the first entry. Supported user_id/project_id/team_id fields are fill
 
 ## 12. Writing safely
 
-The shared WriteGuard runs before handlers read local upload bytes or call the provider. Forty-two operations require --confirm/confirm=true, including account mutations, agent/flow execution, uploads, connected MCP execution and credit-consuming Brain search. --agent/--yes never supplies confirmation.
+Slipway's write guard runs before handlers read local upload bytes or call the provider. Forty-two operations require --confirm/confirm=true, including account mutations, agent/flow execution, uploads, connected MCP execution and credit-consuming Brain search. --agent/--yes never supplies confirmation.
+
+Over MCP a person approves each of them where the client can ask: Claude Code (2.1.246 and later) shows its own prompt, and a client that can show forms asks with an approval form whose one box starts unticked. Each approval is signed, bound to that exact call and works once. Where a client can do neither, the model's confirm=true counts. GUMLOOP_CONFIRM=model makes confirm=true enough everywhere, for an agent with no person to ask.
 
 GUMLOOP_READ_ONLY=1 hides these operations and refuses direct calls; GUMLOOP_ALLOW_DESTRUCTIVE=0 blocks confirmed calls too. Restart after policy changes. Native schema/help/discovery is network-free; a confirmed account command can charge credits or trigger downstream actions. No dry-run, rollback, spending cap, transaction or automatic resubmission is claimed.
 
@@ -1683,7 +1690,7 @@ The optional AUDIT_LOG records local guard decisions, not a provider billing led
 
 ## 13. How it works
 
-ALL_TOOLS derives from one reviewed current REST catalogue. MCP and the house SDK in-memory CLI bridge use its same schemas/handlers and guard. Ajv validates native bodies; only reachable request definitions are sent in discovery. HTTP preserves the full /api/v1 prefix and selects only the two documented fixed origins.
+ALL_TOOLS derives from one reviewed current REST catalogue. [Slipway](https://github.com/thenavidm/slipway) builds the MCP server and the CLI from it, with the same schemas, handlers and guard. Ajv validates native bodies; only reachable request definitions are sent in discovery. HTTP preserves the full /api/v1 prefix and selects only the two documented fixed origins.
 
 npm run sync:api regenerates from a hash-checked sanitized snapshot. -- --refresh reads the current official YAML for review. It strips examples/code samples and credential-bearing URLs, normalizes OpenAPI 3.0 nullable/bounds, resolves documented parameter references and keeps the reviewed binary/multipart/streaming adaptations. Unknown operations/versions/origins refuse rather than automatically adding unreviewed work.
 
@@ -1715,6 +1722,12 @@ Private shell/client settings only. Restart for policy/cached token changes.
 | `GUMLOOP_REQUEST_TIMEOUT_MS` | 100–300000; default 30000 |
 | `GUMLOOP_MAX_RETRIES` | 0–5; default 2; short explicit GET 429 only |
 | `GUMLOOP_MIN_REQUEST_INTERVAL_MS` | 0–10000; default 150; per account/process |
+| `GUMLOOP_CONFIRM` | `human` by default; `model` lets confirm:true alone approve over MCP, for an agent with no person to ask |
+| `GUMLOOP_SURFACE` | `full` by default; `search` lists three tools that find, describe and run the rest |
+| `GUMLOOP_TOOL_TIMEOUT_MS` | Give up on any tool after this long |
+| `GUMLOOP_HTTP_PORT`, `GUMLOOP_HTTP_HOST`, `GUMLOOP_HTTP_TOKEN` | For `--http`: port 8787 and host 127.0.0.1 by default; any other host needs the bearer token |
+| `GUMLOOP_HTTP_ALLOWED_ORIGINS` | Comma-separated browser origins allowed to call `--http`; a page from any other site is refused |
+| `GUMLOOP_DEBUG` | `1` prints debug lines on stderr |
 
 ## 16. Updates and removal
 
@@ -1791,14 +1804,15 @@ No maintained community implementation has been established as a stronger baseli
 
 | Component | Baseline |
 | --- | --- |
-| Package/desktop | 2.0.1 |
+| Package/desktop | 3.0.0 |
 | Current REST schema | OpenAPI 3.0.0/document 1.0.0; checked 2026-10-03 |
 | Operations/tools | 91 current REST + list_accounts; 92 shared tools |
 | Read/confirmed | 50 reads, 42 confirmed operations |
 | Official CLI inspected | PyPI gumloop 0.5.2 |
 | Official hosted MCP | 46 documented tools; live discovery unverified |
 | Node | 22+; CI targets 22/24 on macOS/Linux/Windows |
-| MCP SDK / Ajv / ajv-formats | 1.32.0 / 8.20.0 / 3.0.1 |
+| Slipway / MCP TypeScript SDK, through Slipway | 0.1.20 / 2.3.0 |
+| Ajv / ajv-formats | 8.20.0 / 3.0.1 |
 | TypeScript / Vitest / Vite / MCPB / YAML | 7.0.2 / 5.0.3 / 8.3.2 / 2.1.2 / 2.9.1 |
 
 The dated CHANGELOG records user-facing changes. Version, annotated default-branch tag, npm dist-tag and desktop archive must agree at release. Preserve AGPL and private legacy history.
@@ -1866,7 +1880,7 @@ Yes. Named private profiles select credentials and user/team defaults without in
 <details>
 <summary><b>Does Codex work?</b></summary>
 
-Use the documented stdio registration or shared shell commands. Codex is the priority; fresh matched-task usage measurements remain pending.
+Use the documented stdio registration or shared shell commands. Section 7 has what each costs in Codex.
 
 </details>
 

@@ -8,7 +8,9 @@ Selected messages, flow inputs, upload bytes, cookie payloads and requested chan
 
 Credential-named fields, configured tokens and signed credential URLs are redacted from ordinary JSON. Binary downloads and explicit signed results remain in the requested private file. Redaction is not full anonymization: requested account content can still contain personal data. Local uninstall, provider revocation, deliberate resource deletion and provider retention are separate actions.
 
-The shared WriteGuard runs before handlers read local upload bytes or call the provider. Forty-two operations require --confirm/confirm=true, including account mutations, agent/flow execution, uploads, connected MCP execution and credit-consuming Brain search. --agent/--yes never supplies confirmation.
+Slipway's write guard runs before handlers read local upload bytes or call the provider. Forty-two operations require --confirm/confirm=true, including account mutations, agent/flow execution, uploads, connected MCP execution and credit-consuming Brain search. --agent/--yes never supplies confirmation.
+
+Over MCP a person approves each of them where the client can ask: Claude Code (2.1.246 and later) shows its own prompt, and a client that can show forms asks with an approval form whose one box starts unticked. Each approval is signed, bound to that exact call and works once. Where a client can do neither, the model's confirm=true counts. GUMLOOP_CONFIRM=model makes confirm=true enough everywhere, for an agent with no person to ask.
 
 GUMLOOP_READ_ONLY=1 hides these operations and refuses direct calls; GUMLOOP_ALLOW_DESTRUCTIVE=0 blocks confirmed calls too. Restart after policy changes. Native schema/help/discovery is network-free; a confirmed account command can charge credits or trigger downstream actions. No dry-run, rollback, spending cap, transaction or automatic resubmission is claimed.
 
